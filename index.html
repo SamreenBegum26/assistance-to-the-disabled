@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sukoon — Inclusive Assistance Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/static/css/styles.css"/>
+</head>
+<body>
+
+<nav id="main-nav">
+  <div class="brand" onclick="goHome()">
+    <div class="brand-leaf">🌿</div>
+    <span class="brand-name">Suk<span>oon</span></span>
+  </div>
+  <ul class="nav-links" id="main-nav-links">
+    <li><a onclick="showPage('login')">Login</a></li>
+    <li><a onclick="showPage('register')">Register</a></li>
+  </ul>
+  <button class="btn-ghost" onclick="goHome()">Home</button>
+</nav>
+
+<!-- ══ LOGIN ══ -->
+<div class="page active" id="page-login">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">🌿</div>
+        <div class="auth-title">Welcome back</div>
+        <div class="auth-sub">Sign in to your Sukoon account</div>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Email Address</label>
+        <input class="auth-input" type="email" id="email" placeholder="you@example.com"/>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <input class="auth-input" type="password" id="login-password" placeholder="Enter your password"
+          onkeydown="if(event.key==='Enter') handleLogin()"/>
+      </div>
+      <button class="auth-btn" id="login-btn" onclick="handleLogin()">🔐 Sign In</button>
+      <div class="auth-switch">Don't have an account? <span onclick="showPage('register')">Create one here</span></div>
+      <div class="auth-error" id="login-error"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REGISTER ══ -->
+<div class="page" id="page-register">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">🌿</div>
+        <div class="auth-title">Join Sukoon</div>
+        <div class="auth-sub">Create your account to get started</div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="auth-label" style="display:block;margin-bottom:10px;">I am a...</label>
+        <div class="role-cards">
+          <div class="role-card selected" id="role-user" onclick="selectRole('user')">
+            <div class="role-card-icon">🧑‍🦽</div>
+            <div class="role-card-title">Disabled User</div>
+          </div>
+          <div class="role-card" id="role-admin" onclick="selectRole('admin')">
+            <div class="role-card-icon">🛡️</div>
+            <div class="role-card-title">Admin / Caregiver</div>
+          </div>
+        </div>
+      </div>
+      <div id="admin-id-section">
+        <div class="admin-id-hint">💡 Ask your Admin / Caregiver for their Admin ID before registering.</div>
+        <div class="auth-field">
+          <label class="auth-label">Admin ID <span style="color:var(--ink-soft);font-weight:400;">(provided by your admin)</span></label>
+          <input class="auth-input" type="number" id="register-admin-id" placeholder="e.g. 5"/>
+        </div>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Email Address</label>
+        <input class="auth-input" type="email" id="register-email" placeholder="you@example.com"/>
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <input class="auth-input" type="password" id="register-password" placeholder="Create a strong password"/>
+      </div>
+      <button class="auth-btn" id="register-btn" onclick="handleRegister()">✅ Create Account</button>
+      <div class="auth-switch">Already have an account? <span onclick="showPage('login')">Sign in here</span></div>
+      <div class="auth-error" id="register-error"></div>
+      <div class="auth-success" id="register-success"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HOME ══ -->
+<div class="page" id="page-home">
+  <div class="hero">
+    <h1 class="hero-title">Sukoon<span>सुकून</span></h1>
+    <p class="hero-tagline">"Where every voice is heard, every need is met."</p>
+    <div id="welcome-msg" style="font-size:15px;color:var(--ink-soft);margin-bottom:40px;"></div>
+    <div class="user-cards">
+      <div class="user-card deaf" onclick="showPage('deaf')">
+        <div class="uc-icon">👂</div>
+        <div class="uc-title">Deaf & Hard of Hearing</div>
+        <div class="uc-desc">Speech-to-text transcription and sign language tools.</div>
+      </div>
+      <div class="user-card mute" onclick="showPage('mute')">
+        <div class="uc-icon">🔇</div>
+        <div class="uc-title">Mute & Speech Impaired</div>
+        <div class="uc-desc">Text-to-speech synthesis via gTTS backend.</div>
+      </div>
+      <div class="user-card mobility" onclick="showPage('mobility')">
+        <div class="uc-icon">♿</div>
+        <div class="uc-title">Physically Impaired</div>
+        <div class="uc-desc">Hands-free voice navigation.</div>
+      </div>
+    </div>
+    <div class="portal-cards" style="margin-top:18px;">
+      <div class="portal-card" onclick="showPage('admin')" id="admin-portal" style="display:none;">
+        <div class="portal-icon">🛡️</div>
+        <div class="portal-title">Admin Dashboard</div>
+        <div class="portal-desc">Manage users and assign tasks.</div>
+      </div>
+      <div class="portal-card" onclick="loadSchemes();showPage('schemes')">
+        <div class="portal-icon">📜</div>
+        <div class="portal-title">Government Schemes</div>
+        <div class="portal-desc">Benefits and schemes for disabled persons.</div>
+      </div>
+      <div class="portal-card" onclick="showPage('chatbot')">
+        <div class="portal-icon">🤖</div>
+        <div class="portal-title">AI Assistant</div>
+        <div class="portal-desc">Chat with Sukoon AI for help and guidance.</div>
+      </div>
+      <div class="portal-card" onclick="showPage('community')">
+        <div class="portal-icon">💬</div>
+        <div class="portal-title">Community Chat</div>
+        <div class="portal-desc">Connect and chat with other community members live.</div>
+      </div>
+      <div class="portal-card" onclick="window.location.href='/doctor'">
+        <div class="portal-icon">🩺</div>
+        <div class="portal-title">Virtual Doctor</div>
+        <div class="portal-desc">AI health companion — symptoms, medication, emergency guidance.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DEAF MODULE ══ -->
+<div class="page" id="page-deaf">
+  <div class="module-page">
+    <div class="module-header">
+      <div class="sec-label">Deaf & Hard of Hearing</div>
+      <h2 class="sec-title">Communication <em>tools</em></h2>
+      <p class="sec-sub">Speech-to-text using your browser microphone.</p>
+    </div>
+    <div class="tool-grid">
+      <div class="tool-box">
+        <div class="tool-title">🎙️ Speech to Text</div>
+        <div class="tool-desc">Click the mic, speak, and your words will appear below automatically when you stop talking.</div>
+        <button class="mic-button" id="deaf-mic" onclick="toggleDeafSTT()">🎙️</button>
+        <div style="text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:16px;" id="deaf-stt-status">Click to start listening</div>
+        <div class="output-box empty" id="deaf-stt-output">Transcription will appear here when you stop speaking...</div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-secondary" onclick="copyText('deaf-stt-output')">📋 Copy</button>
+          <button class="btn btn-secondary" onclick="clearOutput('deaf-stt-output')">✕ Clear</button>
+        </div>
+      </div>
+      <div class="tool-box">
+        <div class="tool-title">🤟 Sign Language</div>
+        <div class="tool-desc">Quick sign phrases for common communication needs.</div>
+        <div class="sign-demo-grid">
+          <div class="sign-card" onclick="translateSign('Hello','👋')"><span class="sign-emoji">👋</span><span class="sign-label">Hello</span></div>
+          <div class="sign-card" onclick="translateSign('Thank You','🙏')"><span class="sign-emoji">🙏</span><span class="sign-label">Thanks</span></div>
+          <div class="sign-card" onclick="translateSign('Help Me','🆘')"><span class="sign-emoji">🆘</span><span class="sign-label">Help</span></div>
+          <div class="sign-card" onclick="translateSign('I Understand','✅')"><span class="sign-emoji">✅</span><span class="sign-label">Understand</span></div>
+          <div class="sign-card" onclick="translateSign('Yes','✔️')"><span class="sign-emoji">✔️</span><span class="sign-label">Yes</span></div>
+          <div class="sign-card" onclick="translateSign('No','❌')"><span class="sign-emoji">❌</span><span class="sign-label">No</span></div>
+          <div class="sign-card" onclick="translateSign('Water','💧')"><span class="sign-emoji">💧</span><span class="sign-label">Water</span></div>
+          <div class="sign-card" onclick="translateSign('Doctor','🩺')"><span class="sign-emoji">🩺</span><span class="sign-label">Doctor</span></div>
+        </div>
+        <div class="output-box empty" id="deaf-sign-output" style="margin-top:16px;">Selected sign will appear here...</div>
+      </div>
+    </div>
+    <button class="btn btn-secondary" onclick="showPage('home')">← Back to Home</button>
+  </div>
+</div>
+
+<!-- ══ MUTE MODULE ══ -->
+<div class="page" id="page-mute">
+  <div class="module-page">
+    <div class="module-header">
+      <div class="sec-label">Mute & Speech Impaired</div>
+      <h2 class="sec-title">Your <em>voice</em></h2>
+      <p class="sec-sub">Type your message and Sukoon will speak it using gTTS.</p>
+    </div>
+    <div class="tool-grid">
+      <div class="tool-box">
+        <div class="tool-title">🔊 Text to Speech</div>
+        <div class="tool-desc">Type your message and click Speak — gTTS backend will generate and play the audio.</div>
+        <textarea class="ta" id="mute-tts-input" placeholder="Type what you want to say...">I would like a glass of water, please.</textarea>
+        <div style="margin-bottom:14px;margin-top:10px;">
+          <label style="font-size:13px;font-weight:600;color:var(--ink-mid);display:block;margin-bottom:6px;">Language</label>
+          <select class="sel" id="mute-voice">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="te">Telugu</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-primary" onclick="speakMuteTTS()">🔊 Speak via gTTS</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('mute-tts-input').value=''">✕ Clear</button>
+        </div>
+        <div id="tts-status" style="margin-top:12px;font-size:13px;color:var(--ink-soft);"></div>
+      </div>
+      <div class="tool-box">
+        <div class="tool-title">⚡ Quick Phrases</div>
+        <div class="tool-desc">Tap a phrase to instantly speak it.</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <button class="btn btn-secondary" style="justify-content:flex-start;" onclick="setAndSpeak('I need help please.')">🆘 I need help please.</button>
+          <button class="btn btn-secondary" style="justify-content:flex-start;" onclick="setAndSpeak('I need water.')">💧 I need water.</button>
+          <button class="btn btn-secondary" style="justify-content:flex-start;" onclick="setAndSpeak('I need medicine.')">💊 I need medicine.</button>
+          <button class="btn btn-secondary" style="justify-content:flex-start;" onclick="setAndSpeak('Please call a doctor.')">🩺 Please call a doctor.</button>
+          <button class="btn btn-secondary" style="justify-content:flex-start;" onclick="setAndSpeak('I am in pain.')">😣 I am in pain.</button>
+          <button class="btn btn-secondary" style="justify-content:flex-start;" onclick="setAndSpeak('I need to use the restroom.')">🚻 I need to use the restroom.</button>
+          <button class="btn btn-secondary" style="justify-content:flex-start;" onclick="setAndSpeak('I am hungry.')">🍽️ I am hungry.</button>
+          <button class="btn btn-secondary" style="justify-content:flex-start;" onclick="setAndSpeak('This is an emergency!')">🚨 This is an emergency!</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-secondary" onclick="showPage('home')">← Back to Home</button>
+  </div>
+</div>
+
+<!-- ══ MOBILITY MODULE ══ -->
+<div class="page" id="page-mobility">
+  <div class="module-page">
+    <div class="module-header">
+      <div class="sec-label">Physically Impaired</div>
+      <h2 class="sec-title">Hands-free <em>navigation</em></h2>
+      <p class="sec-sub">Control the entire platform using only your voice.</p>
+    </div>
+    <div class="tool-box" style="max-width:600px;margin:0 auto;">
+      <div class="tool-title">🎙️ Voice Navigation</div>
+      <div class="tool-desc">Say voice commands to navigate between pages.</div>
+      <button class="mic-button" id="mobility-mic" onclick="toggleVoiceNav()" style="background:linear-gradient(135deg,var(--amber),#a86820);">🎙️</button>
+      <div style="text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:20px;" id="mobility-status">Click to activate voice navigation</div>
+      <div style="background:var(--amber-bg);border:1.5px solid rgba(196,124,43,0.25);border-radius:14px;padding:18px;margin-bottom:20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--amber);">📢 Available Commands:</div>
+        <div class="voice-cmd-list">
+          <div class="voice-cmd">🏠 Say <strong>"go home"</strong> — return to homepage</div>
+          <div class="voice-cmd">👂 Say <strong>"deaf module"</strong> — open deaf tools</div>
+          <div class="voice-cmd">🔇 Say <strong>"mute module"</strong> — open mute tools</div>
+          <div class="voice-cmd">📜 Say <strong>"schemes"</strong> — government schemes</div>
+          <div class="voice-cmd">🤖 Say <strong>"chatbot"</strong> — open AI assistant</div>
+          <div class="voice-cmd">🛡️ Say <strong>"admin"</strong> — open admin panel</div>
+        </div>
+      </div>
+      <div class="output-box empty" id="mobility-output">Voice command results will appear here...</div>
+    </div>
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn btn-secondary" onclick="showPage('home')">← Back to Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ GOVERNMENT SCHEMES ══ -->
+<div class="page" id="page-schemes">
+  <div class="module-page">
+    <div class="module-header">
+      <div class="sec-label">Government Benefits</div>
+      <h2 class="sec-title">Schemes for <em>disabled persons</em></h2>
+      <p class="sec-sub">Filter by disability type to find schemes you are eligible for.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:28px;">
+      <button class="btn btn-primary" onclick="loadSchemes('all')">🔍 All</button>
+      <button class="btn btn-secondary" onclick="loadSchemes('physical')">♿ Physical</button>
+      <button class="btn btn-secondary" onclick="loadSchemes('visual')">👁️ Visual</button>
+      <button class="btn btn-secondary" onclick="loadSchemes('hearing')">👂 Hearing</button>
+      <button class="btn btn-secondary" onclick="loadSchemes('mental')">🧠 Mental</button>
+    </div>
+    <div id="schemes-list">
+      <div style="text-align:center;padding:40px;color:var(--ink-soft);">Loading schemes...</div>
+    </div>
+    <button class="btn btn-secondary" onclick="showPage('home')">← Back to Home</button>
+  </div>
+</div>
+
+<!-- ══ CHATBOT ══ -->
+<div class="page" id="page-chatbot">
+  <div class="module-page">
+    <div class="module-header">
+      <div class="sec-label">AI Assistant</div>
+      <h2 class="sec-title">Chat with <em>Sukoon AI</em></h2>
+      <p class="sec-sub">Ask about government schemes, your tasks, or anything you need help with.</p>
+    </div>
+    <div style="max-width:700px;margin:0 auto;">
+      <div style="display:flex;gap:10px;margin-bottom:16px;">
+        <select class="sel" id="chat-language" style="max-width:160px;">
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+          <option value="te">Telugu</option>
+        </select>
+        <button class="btn btn-secondary" onclick="newChatSession()">➕ New Chat</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-msg assistant">👋 Hello! I'm Sukoon AI. I can help you with government schemes, your daily tasks, and general assistance. How can I help you today?</div>
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" type="text" id="chat-input" placeholder="Type your message..."
+          onkeydown="if(event.key==='Enter') sendChatMessage()"/>
+        <button class="btn btn-primary" onclick="sendChatMessage()">Send →</button>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn btn-secondary" onclick="showPage('home')">← Back to Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADMIN DASHBOARD ══ -->
+<div class="page" id="page-admin">
+  <div class="module-page">
+    <div class="module-header">
+      <div class="sec-label">Admin Portal</div>
+      <h2 class="sec-title">Platform <em>management</em></h2>
+      <p class="sec-sub">Assign tasks to users and monitor their progress.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="admin-grid" style="margin-bottom:24px;">
+      <div class="stat-card">
+        <div class="stat-num" id="admin-user-count">-</div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="admin-task-count">-</div>
+        <div class="stat-label">Tasks Assigned</div>
+      </div>
+    </div>
+
+    <!-- Assign Task -->
+    <div class="task-form">
+      <div class="tool-title" style="margin-bottom:20px;">📋 Assign New Task</div>
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label">User ID</label>
+          <input class="form-input" type="number" id="task-user-id" placeholder="e.g. 3"/>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Task Title</label>
+          <input class="form-input" type="text" id="task-title" placeholder="e.g. Morning Walk"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label">Category</label>
+          <input class="form-input" type="text" id="task-category" placeholder="e.g. Exercise"/>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Scheduled Time</label>
+          <input class="form-input" type="text" id="task-time" placeholder="e.g. 08:00 AM"/>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="assignTask()">✅ Assign Task</button>
+      <div id="task-assign-msg" style="margin-top:12px;font-size:13px;"></div>
+    </div>
+
+    <!-- Users List -->
+    <div class="task-list">
+      <div class="tool-title" style="margin-bottom:16px;">👥 Your Users</div>
+      <div id="admin-users-list">
+        <div style="color:var(--ink-soft);font-size:14px;">Loading users...</div>
+      </div>
+    </div>
+
+    <button class="btn btn-secondary" style="margin-top:24px;" onclick="showPage('home')">← Back to Home</button>
+  </div>
+</div>
+
+<!-- ══ USER DASHBOARD ══ -->
+<div class="page" id="page-user">
+  <div class="module-page">
+    <div class="module-header">
+      <div class="sec-label">My Dashboard</div>
+      <h2 class="sec-title">My <em>Tasks</em></h2>
+      <p class="sec-sub">Your daily routine tasks assigned by your caregiver.</p>
+    </div>
+
+    <!-- Progress -->
+    <div style="background:var(--green-bg);border:1.5px solid rgba(61,122,86,0.2);border-radius:16px;padding:24px;margin-bottom:24px;text-align:center;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:700;color:var(--green);" id="user-progress">-</div>
+      <div style="font-size:14px;color:var(--ink-mid);">Today's Progress</div>
+    </div>
+
+    <!-- Tasks -->
+    <div class="task-list" id="user-tasks-list">
+      <div style="color:var(--ink-soft);font-size:14px;">Loading your tasks...</div>
+    </div>
+
+    <button class="btn btn-secondary" style="margin-top:24px;" onclick="showPage('home')">← Back to Home</button>
+  </div>
+</div>
+
+<div class="toast" id="toastEl"></div>
+
+<script src="/static/js/core.js"></script>
+<script src="/static/js/auth-service.js"></script>
+<script src="/static/js/assistive-service.js"></script>
+<script src="/static/js/schemes-service.js"></script>
+<script src="/static/js/chatbot-service.js"></script>
+<script src="/static/js/routines-service.js"></script>
+</body>
+</html>
